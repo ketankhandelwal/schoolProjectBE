@@ -1,0 +1,247 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id            Int      @id @default(autoincrement())
+  name          String   @db.VarChar(50)
+  email         String   @db.VarChar(60)
+  designation   String   @db.VarChar(50)
+  phone_number  String   @db.VarChar(15)
+  profile_photo String?  @db.VarChar(250)
+  role          Int
+  status        Int      @default(1)
+  created_by    Int
+  updated_by    Int
+  created_at    DateTime @default(now()) @db.Timestamp(0)
+  updated_at    DateTime @default(now()) @db.Timestamp(0)
+  password      String   @db.VarChar(80)
+  Role          Role     @relation(fields: [role], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "AdminRole_FK_RoleId")
+  Status        Status   @relation(fields: [status], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "AdminStatus_FK_StatusId")
+
+  @@index([role], map: "AdminRole_FK_RoleId_idx")
+  @@index([status], map: "AdminStatus_FK_StatusId_idx")
+}
+
+model ExpenseType {
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(45)
+  status     Int
+  created_by Int
+  updated_by Int
+  created_at DateTime @db.Timestamp(0)
+  updated_at DateTime @db.Timestamp(0)
+  Status     Status   @relation(fields: [status], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ExpenseTypeStatus_FK_StatusId")
+
+  @@index([status], map: "ExpenseTypeStatus_FK_StatusId_idx")
+}
+
+model FeesType {
+  id          Int           @id @default(autoincrement())
+  name        String        @db.VarChar(45)
+  status      Int
+  created_by  Int
+  updated_by  Int
+  created_at  DateTime      @db.Timestamp(0)
+  updated_at  DateTime      @db.Timestamp(0)
+  Status      Status        @relation(fields: [status], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FeesTypeStatus_FK_StatusId")
+  StudentFees StudentFees[]
+
+  @@index([status], map: "FeesTypeStatus_FK_StatusId_idx")
+}
+
+model Gender {
+  id         Int       @id @default(autoincrement())
+  name       String    @db.VarChar(45)
+  status     Int       @default(1)
+  created_at DateTime  @default(now()) @db.Timestamp(0)
+  updated_at DateTime  @default(now()) @db.Timestamp(0)
+  created_by Int
+  updated_by Int
+  Status     Status    @relation(fields: [status], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "GenderStatus_FK_StatusId")
+  Staff      Staff[]
+  Student    Student[]
+
+  @@index([status], map: "GenderStatus_FK_StatusId_idx")
+}
+
+model LeaveType {
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(45)
+  status     Int
+  created_by Int
+  updated_by Int
+  created_at DateTime @db.Timestamp(0)
+  updated_at DateTime @db.Timestamp(0)
+  Status     Status   @relation(fields: [status], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "LeaveTypeStatus_FK_StatusId")
+
+  @@index([status], map: "LeaveTypeStatus_FK_StatusId_idx")
+}
+
+model Months {
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(45)
+  status     Int
+  created_by Int
+  updated_by Int
+  created_at DateTime @db.Timestamp(0)
+  updated_at DateTime @db.Timestamp(0)
+  Status     Status   @relation(fields: [status], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "MonthsStatus_FK_StatusId")
+
+  @@index([status], map: "MonthsStatus_FK_StatusId_idx")
+}
+
+model Role {
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(45)
+  status     Int      @default(1)
+  created_by Int
+  updated_by Int
+  created_at DateTime @default(now()) @db.Timestamp(0)
+  updated_at DateTime @default(now()) @db.Timestamp(0)
+  Admin      Admin[]
+  Status     Status   @relation(fields: [status], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "RoleStatus_FK_StatusId")
+  Staff      Staff[]
+
+  @@index([status], map: "RoleStatus_FK_StatusId_idx")
+}
+
+model Staff {
+  id                    Int           @id @default(autoincrement())
+  name                  String        @db.VarChar(60)
+  email                 String        @db.VarChar(100)
+  phone_number          String        @db.VarChar(45)
+  role                  Int
+  address               String        @db.VarChar(250)
+  previous_organization String?       @db.VarChar(100)
+  salary                Int
+  YOE                   Decimal?      @default(0) @db.Decimal(10, 0)
+  profile_photo         String?       @db.VarChar(250)
+  gender                Int
+  subjects              String?       @db.Text
+  qualifications        String?       @db.Text
+  status                Int           @default(1)
+  created_at            DateTime      @default(now()) @db.Timestamp(0)
+  updated_at            DateTime      @default(now()) @db.Timestamp(0)
+  created_by            Int
+  updated_by            Int
+  Gender                Gender        @relation(fields: [gender], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "StaffGender_FK_GenderId")
+  Role                  Role          @relation(fields: [role], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "StaffRole_FK_RoleId")
+  Status                Status        @relation(fields: [status], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "StaffStatus_FK_StatusId")
+  StaffLeaves           StaffLeaves[]
+
+  @@index([gender], map: "StaffGender_FK_GenderId_idx")
+  @@index([role], map: "StaffRole_FK_RoleId_idx")
+  @@index([status], map: "StaffStatus_FK_StatusId_idx")
+}
+
+model StaffLeaves {
+  id                Int           @id @default(autoincrement())
+  staff_id          Int
+  leave_type        Int
+  status            Int
+  created_at        DateTime      @db.Timestamp(0)
+  updated_at        DateTime      @db.Timestamp(0)
+  created_by        Int
+  updated_by        Int
+  StaffLeaves       StaffLeaves   @relation("StaffLeavesToStaffLeaves", fields: [leave_type], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "StaffLeavesLeave_type_FK_LeaveTypeId")
+  other_StaffLeaves StaffLeaves[] @relation("StaffLeavesToStaffLeaves")
+  Staff             Staff         @relation(fields: [staff_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "StaffLeavesStaff_id_FK_StaffId")
+  Status            Status        @relation(fields: [status], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "StaffLeavesStatus_FK_StatusId")
+
+  @@index([leave_type], map: "StaffLeavesLeave_type_FK_LeaveTypeId_idx")
+  @@index([staff_id], map: "StaffLeavesStaff_id_FK_StaffId_idx")
+  @@index([status], map: "StaffLeavesStatus_FK_StatusId_idx")
+}
+
+model Status {
+  id          Int           @id @default(autoincrement())
+  name        String        @db.VarChar(45)
+  status      Int           @default(1)
+  created_by  Int
+  updated_by  Int
+  created_at  DateTime      @default(now()) @db.Timestamp(0)
+  updated_at  DateTime      @default(now()) @db.Timestamp(0)
+  Admin       Admin[]
+  Classes     Classes[]
+  ExpenseType ExpenseType[]
+  FeesType    FeesType[]
+  Gender      Gender[]
+  LeaveType   LeaveType[]
+  Months      Months[]
+  Role        Role[]
+  Staff       Staff[]
+  StaffLeaves StaffLeaves[]
+  Student     Student[]
+  StudentFees StudentFees[]
+}
+
+model Student {
+  id                     Int           @id @default(autoincrement())
+  name                   String        @db.VarChar(60)
+  age                    Int
+  class_id               Int
+  sec                    String        @db.VarChar(3)
+  phone_number           String        @db.VarChar(45)
+  address                String        @db.VarChar(100)
+  previous_school        String?       @db.VarChar(45)
+  emergency_phone_number String?       @db.VarChar(45)
+  profile_photo          String?       @db.VarChar(250)
+  allergy                String?       @db.VarChar(45)
+  gender                 Int
+  status                 Int           @default(1)
+  created_by             Int
+  updated_by             Int
+  created_at             DateTime      @default(now()) @db.Timestamp(0)
+  updated_at             DateTime      @default(now()) @db.Timestamp(0)
+  date_of_birth          DateTime?     @db.Date
+  Classes                Classes       @relation(fields: [class_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "StudentClass_id_FK_ClassesId")
+  Gender                 Gender        @relation(fields: [gender], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "StudentGender_FK_GenderId")
+  Status                 Status        @relation(fields: [status], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "StudentStatus_FK_StatusId")
+  StudentFees            StudentFees[]
+
+  @@index([gender], map: "StudentGender_FK_GenderId_idx")
+  @@index([status], map: "StudentStatus_FK_StatusId_idx")
+  @@index([class_id], map: "StudentClass_id_FK_ClassesId_idx")
+}
+
+model StudentFees {
+  id         Int      @id @default(autoincrement())
+  student_id Int
+  month      Int
+  amount     Int
+  year       Int
+  fees_type  Int
+  status     Int      @default(1)
+  created_at DateTime @default(now()) @db.Timestamp(0)
+  updated_at DateTime @default(now()) @db.Timestamp(0)
+  created_by Int
+  updated_by Int
+  FeesType   FeesType @relation(fields: [fees_type], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "StudentFeesFeesType_FK_FeesTypeId")
+  Status     Status   @relation(fields: [status], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "StudentFeesStatus_FK_StatusId")
+  Student    Student  @relation(fields: [student_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "StudentFeesStudent_Id_FK_StudentId")
+
+  @@index([fees_type], map: "StudentFeesFeesType_FK_FeesTypeId_idx")
+  @@index([month], map: "StudentFeesMonth_FK_MonthId_idx")
+  @@index([status], map: "StudentFeesStatus_FK_StatusId_idx")
+  @@index([student_id], map: "StudentFeesStudent_Id_FK_StudentId_idx")
+}
+
+model Classes {
+  id         Int       @id @default(autoincrement())
+  name       String    @db.VarChar(45)
+  status     Int       @default(1)
+  created_at DateTime  @default(now()) @db.Timestamp(0)
+  updated_at DateTime  @default(now()) @db.Timestamp(0)
+  created_by Int
+  updated_by Int
+  Status     Status    @relation(fields: [status], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ClassesStatus_FK_StatusId")
+  Student    Student[]
+
+  @@index([status], map: "ClassesStatus_FK_StatusId_idx")
+}
