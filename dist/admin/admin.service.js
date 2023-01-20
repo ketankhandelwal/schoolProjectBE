@@ -13,7 +13,9 @@ exports.AdminService = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
 const constants_1 = require("../constants");
+const message_1 = require("../message");
 const prisma_service_1 = require("../prisma.service");
+const bcrypt = require("bcrypt");
 let AdminService = class AdminService {
     constructor(jwtService, prisma) {
         this.jwtService = jwtService;
@@ -35,12 +37,25 @@ let AdminService = class AdminService {
         });
         return true;
     }
+    async getAdminDetails(id) {
+        const data = await this.prisma.admin.findUnique({
+            where: {
+                id: Number(id)
+            }
+        });
+        console.log(data);
+        delete data.password;
+        return {
+            res: data
+        };
+    }
     async getSubAdminDetails(id) {
         const data = await this.prisma.admin.findUnique({
             where: {
                 id: Number(id),
             },
         });
+        delete data.password;
         return {
             res: data,
         };
@@ -55,6 +70,54 @@ let AdminService = class AdminService {
             }
         });
         return true;
+    }
+    async update(id, request) {
+        return this.prisma.admin.updateMany({
+            data: Object.assign(Object.assign({}, request), { id: undefined }),
+            where: {
+                id,
+            },
+        });
+    }
+    async findById(AdminWhereUniqueInput) {
+        const response = await this.prisma.admin.findUnique({
+            where: AdminWhereUniqueInput,
+        });
+        return response;
+    }
+    async changePassword(user, userDetails) {
+        if (userDetails && userDetails["userDetails"]) {
+            let userDetailsValue = await this.findById({
+                id: userDetails["userDetails"]["userData"]["id"],
+            });
+            console.log(userDetailsValue);
+            let matchPassword = await bcrypt.compare(user.old_password, userDetailsValue.password);
+            console.log(matchPassword);
+            if (!matchPassword) {
+                throw new common_1.HttpException({ message: message_1.MESSAGE.oldPasswordNotMatch }, common_1.HttpStatus.BAD_REQUEST);
+            }
+            let password = await bcrypt.hash(user.new_password, parseInt(process.env.HASH_SALT_ROUNDS));
+            let adminUpdateData = {
+                created_by: constants_1.NUMBER.zero,
+                updated_by: constants_1.NUMBER.zero,
+                updated_at: new Date(),
+                password: password,
+            };
+            if (this.update(userDetailsValue.id, adminUpdateData)) {
+                return { message: message_1.MESSAGE.resetPasswordSuccess };
+            }
+        }
+        else {
+            throw new common_1.HttpException({ message: message_1.MESSAGE.userNotExists }, common_1.HttpStatus.BAD_REQUEST);
+        }
+    }
+    async updateAdmin(reqData, id) {
+        return this.prisma.admin.updateMany({
+            data: reqData,
+            where: {
+                id,
+            },
+        });
     }
 };
 AdminService = __decorate([

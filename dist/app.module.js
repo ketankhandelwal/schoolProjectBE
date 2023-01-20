@@ -14,11 +14,13 @@ const transform_interceptor_1 = require("./interceptor/transform.interceptor");
 const jwt_auth_guard_1 = require("./auth/jwt-auth.guard");
 const auth_module_1 = require("./auth/auth.module");
 const student_module_1 = require("./student/student.module");
+const staff_module_1 = require("./staff/staff.module");
+const admin_module_1 = require("./admin/admin.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [auth_module_1.AuthModule, student_module_1.StudentModule],
+        imports: [auth_module_1.AuthModule, student_module_1.StudentModule, staff_module_1.StaffModule, admin_module_1.AdminModule],
         controllers: [],
         providers: [{
                 provide: core_1.APP_INTERCEPTOR,

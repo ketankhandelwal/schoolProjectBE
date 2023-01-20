@@ -47,13 +47,13 @@ let StudentService = class StudentService {
             res: data,
         };
     }
-    async deleteStudent(id) {
+    async deleteStudent(data) {
         await this.prisma.student.update({
             data: {
                 status: constants_1.STATUS.delete,
             },
             where: {
-                id: Number(id),
+                id: Number(data.id),
             },
         });
         return true;

@@ -21,6 +21,7 @@ const roles_guard_1 = require("../roleguard/roles.guard");
 const student_addBulkFees_dto_1 = require("./dto/student.addBulkFees.dto");
 const student_addFee_dto_1 = require("./dto/student.addFee.dto");
 const student_create_dto_1 = require("./dto/student.create.dto");
+const student_delete_dto_1 = require("./dto/student.delete.dto");
 const student_update_dto_1 = require("./dto/student.update.dto");
 const student_service_1 = require("./student.service");
 let StudentController = class StudentController {
@@ -48,8 +49,8 @@ let StudentController = class StudentController {
             }, common_1.HttpStatus.BAD_REQUEST);
         });
     }
-    async deleteStudent(id) {
-        return this.studentService.deleteStudent(Number(id)).catch((err) => {
+    async deleteStudent(data) {
+        return this.studentService.deleteStudent(data).catch((err) => {
             throw new common_1.HttpException({
                 message: err.message,
             }, common_1.HttpStatus.BAD_REQUEST);
@@ -85,14 +86,13 @@ let StudentController = class StudentController {
         data.searchData = {
             where: {},
         };
-        console.log(data);
+        data.searchData.where.status = 1;
         if (gender) {
             data.searchData.where.gender = Number(gender);
         }
         if (classes) {
             data.searchData.where.class_id = Number(classes);
         }
-        console.log(classes);
         if (start_date || end_date) {
             if (start_date) {
                 start_date += " 00:00:00";
@@ -171,10 +171,9 @@ __decorate([
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
     (0, common_1.SetMetadata)('roles', [constants_1.ROLE_ENUM.admin]),
     (0, common_1.Post)('deleteStudent'),
-    (0, swagger_1.ApiQuery)({ name: "id", required: true }),
-    __param(0, (0, common_1.Query)("id")),
+    __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [student_delete_dto_1.DELETESTUDENTDTO]),
     __metadata("design:returntype", Promise)
 ], StudentController.prototype, "deleteStudent", null);
 __decorate([

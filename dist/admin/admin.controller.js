@@ -19,7 +19,9 @@ const swagger_1 = require("@nestjs/swagger");
 const constants_1 = require("../constants");
 const roles_guard_1 = require("../roleguard/roles.guard");
 const admin_service_1 = require("./admin.service");
+const admin_changePassword_dto_1 = require("./dto/admin.changePassword.dto");
 const admin_create_subAdmin_dto_1 = require("./dto/admin.create.subAdmin.dto");
+const admin_update_dto_1 = require("./dto/admin.update.dto");
 const admin_update_subAdmin_dto_1 = require("./dto/admin.update.subAdmin.dto");
 let AdminController = class AdminController {
     constructor(adminService) {
@@ -48,6 +50,30 @@ let AdminController = class AdminController {
     }
     async deleteStudent(id) {
         return this.adminService.deleteSubAdmin(Number(id)).catch((err) => {
+            throw new common_1.HttpException({
+                message: err.message,
+            }, common_1.HttpStatus.BAD_REQUEST);
+        });
+    }
+    async getAdminDetails(req) {
+        console.log(req.user.userDetails.userData.id);
+        return this.adminService.getAdminDetails(req.user.userDetails.userData.id).catch((err) => {
+            throw new common_1.HttpException({
+                message: err.message,
+            }, common_1.HttpStatus.BAD_REQUEST);
+        });
+    }
+    async adminChangePassword(data, req) {
+        return this.adminService.changePassword(data, req.user).catch((err) => {
+            throw new common_1.HttpException({
+                message: err.message,
+            }, common_1.HttpStatus.BAD_REQUEST);
+        });
+    }
+    async update(data, req) {
+        return this.adminService
+            .updateAdmin(data, Number(req.user.userDetails.userData.id))
+            .catch((err) => {
             throw new common_1.HttpException({
                 message: err.message,
             }, common_1.HttpStatus.BAD_REQUEST);
@@ -100,7 +126,41 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], AdminController.prototype, "deleteStudent", null);
+__decorate([
+    (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
+    (0, common_1.SetMetadata)('roles', [constants_1.ROLE_ENUM.admin, constants_1.ROLE_ENUM.subAdmin]),
+    (0, common_1.Get)('adminDetails'),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "getAdminDetails", null);
+__decorate([
+    (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)("jwt")),
+    (0, common_1.SetMetadata)("roles", [constants_1.ROLE_ENUM.admin, constants_1.ROLE_ENUM.subAdmin]),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, swagger_1.ApiBody)({
+        type: admin_changePassword_dto_1.UpdateAdminChangePasswordDto,
+    }),
+    (0, common_1.Post)("adminChangePassword"),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [admin_changePassword_dto_1.UpdateAdminChangePasswordDto, Object]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "adminChangePassword", null);
+__decorate([
+    (0, common_1.Post)("update"),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [admin_update_dto_1.UpdateAdminDto, Object]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "update", null);
 AdminController = __decorate([
+    (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.Controller)('admin'),
     __metadata("design:paramtypes", [admin_service_1.AdminService])
 ], AdminController);

@@ -9,7 +9,7 @@ export declare class StudentService {
     getStudentDetails(id: any): Promise<{
         res: import(".prisma/client").Student;
     }>;
-    deleteStudent(id: any): Promise<boolean>;
+    deleteStudent(data: any): Promise<boolean>;
     getStudentFeesDetails(id: any, year: any): Promise<{
         res: {
             totalActions: number;

@@ -7,6 +7,7 @@ import { RolesGuard } from "src/roleguard/roles.guard";
 import { ADDBULKFEESDTO } from "./dto/student.addBulkFees.dto";
 import { ADDSTUDENTFEEDTO } from "./dto/student.addFee.dto";
 import { STUDENTCREATEDTO } from "./dto/student.create.dto";
+import { DELETESTUDENTDTO } from "./dto/student.delete.dto";
 import { UPDATESTUDENTDTO } from "./dto/student.update.dto";
 import { StudentService } from "./student.service";
 @Controller('student')
@@ -74,9 +75,8 @@ export class StudentController {
     @SetMetadata('roles', [ROLE_ENUM.admin])
 
     @Post('deleteStudent')
-    @ApiQuery({name:"id", required:true})
-    async deleteStudent(@Query("id") id:any) {
-      return this.studentService.deleteStudent(Number(id)).catch((err) => {
+    async deleteStudent(@Body() data:DELETESTUDENTDTO) {
+      return this.studentService.deleteStudent(data).catch((err) => {
 
         throw new HttpException(
           {
@@ -180,10 +180,11 @@ export class StudentController {
       let data = <any>{};
       data.searchData = {
         where: {
+          
         },
       };
-  
-  console.log(data);
+
+  data.searchData.where.status = 1;
   
       if (gender) {
         data.searchData.where.gender = Number(gender);
@@ -192,7 +193,6 @@ export class StudentController {
       if (classes) {
         data.searchData.where.class_id = Number(classes);
       }
-      console.log(classes);
   
       if (start_date || end_date) {
         if (start_date) {

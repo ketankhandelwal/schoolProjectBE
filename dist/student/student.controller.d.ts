@@ -1,6 +1,7 @@
 import { ADDBULKFEESDTO } from "./dto/student.addBulkFees.dto";
 import { ADDSTUDENTFEEDTO } from "./dto/student.addFee.dto";
 import { STUDENTCREATEDTO } from "./dto/student.create.dto";
+import { DELETESTUDENTDTO } from "./dto/student.delete.dto";
 import { UPDATESTUDENTDTO } from "./dto/student.update.dto";
 import { StudentService } from "./student.service";
 export declare class StudentController {
@@ -11,7 +12,7 @@ export declare class StudentController {
     getStudentDetails(id: any): Promise<{
         res: import(".prisma/client").Student;
     }>;
-    deleteStudent(id: any): Promise<boolean>;
+    deleteStudent(data: DELETESTUDENTDTO): Promise<boolean>;
     getStudentFeesDetails(id: number, year: number, req: any): Promise<{
         res: {
             totalActions: number;
