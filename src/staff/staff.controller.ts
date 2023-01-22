@@ -49,8 +49,7 @@ export class StaffController{
             status: NUMBER.one
         },
       };
-      
-      console.log(role)
+
       if (gender) {
         data.searchData.where.gender = Number(gender);
       }
@@ -206,17 +205,53 @@ export class StaffController{
     @UseGuards(RolesGuard)
     @UseGuards(AuthGuard('jwt'))
     @SetMetadata('roles', [ROLE_ENUM.admin,  ROLE_ENUM.subAdmin])
-    @Get('getStaffLeavesDetails/:id')
-    @ApiParam({name: "id", required:true})
+    @Get('getStaffLeavesDetails')
+    @ApiQuery({name: "id", required:false})
     @ApiQuery({name:"year", required:false})
     @ApiQuery({name:"month", required:false})
-    async getStudentFeesDetails(@Param('id') id:number, @Query('month') month:number, @Query('year') year:number, @Request() req){
+    @ApiQuery({name:"leave_type", required:false})
+    public async getStaffLeavesDetails(@Query('id') id:any, @Query('month') month:number, @Query('year') year:number, @Query('leave_type') leave_type: number, @Request() req): Promise<any>{
+      console.log((id));
+      console.log(month)
 
-      if(!year){
-        year = new Date().getFullYear()
+      let data = <any>{};
+      data.searchData =<any> {
+        where: {
+            status: NUMBER.one,
+            staff_id : Number(id)
+        },
+      };
+
+      if(leave_type){
+        data.searchData.where.leave_type = Number(leave_type);
       }
 
-      return this.staffService.getStaffLeaveDetails(Number(id),Number(month),Number(year)).catch((err) => {
+      if(month){
+        data.searchData.where.leave_from = {
+          lte: new Date(`${new Date().getFullYear()}-${Number(month)+1}-1`),
+          gte: new Date(`${new Date().getFullYear()}-${month}-1`)
+        }
+      }
+
+      if(year){
+
+        data.searchData.where.leave_from = {
+          lte: new Date(`${Number(year)+1}-${1}-1`),
+          gte: new Date(`${year}-${1}-1`)
+        }
+
+      }
+
+      if(year && month){
+
+        data.searchData.where.leave_from = {
+          lte: new Date(`${year}-${Number(month)+1}-1`),
+          gte: new Date(`${year}-${month}-1`)
+        }
+
+      }
+
+      return this.staffService.getStaffLeaveDetails(data).catch((err) => {
         throw new HttpException(
           {
             message: err.message,

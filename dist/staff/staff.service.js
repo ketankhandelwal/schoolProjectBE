@@ -131,25 +131,11 @@ let StaffService = class StaffService {
         }
         return true;
     }
-    async getStaffLeaveDetails(id, month, year) {
-        const staffTotalLeave = await this.prisma.staffLeaves.aggregate({
-            _sum: {
-                leave_count: true,
-            },
-            where: {
-                staff_id: Number(id),
-            },
-        });
-        const staffLeavesInParticularMonth = await this.prisma.staffLeaves.findMany({
-            where: {
-                staff_id: Number(id),
-                leave_from: {
-                    lte: new Date(`${year}-${month}-31`),
-                    gte: new Date(`${year}-${month}-01`),
-                },
-            },
-        });
-        return { res: { staffTotalLeave, staffLeavesInParticularMonth } };
+    async getStaffLeaveDetails(data) {
+        console.log(data.searchData.where);
+        const staffLeavesInParticularMonth = await this.prisma.staffLeaves.findMany(data.searchData);
+        console.log(staffLeavesInParticularMonth);
+        return { res: staffLeavesInParticularMonth };
     }
 };
 StaffService = __decorate([

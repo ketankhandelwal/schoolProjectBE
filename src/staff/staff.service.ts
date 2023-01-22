@@ -103,9 +103,8 @@ export class StaffService {
       data.leave_count = diffDays + 1;
       return this.prisma.staffLeaves.create({ data: data });
     } else {
-
       const new_to = <any>new Date(`${leave_from_year}-${leave_to_month}-1`);
-      console.log(new_to)
+      console.log(new_to);
 
       const diffTime1 = <any>Math.abs(from - new_to);
       const diffDays1 = Math.ceil(diffTime1 / (1000 * 60 * 60 * 24));
@@ -141,34 +140,14 @@ export class StaffService {
     return true;
   }
 
-  public async getStaffLeaveDetails(id, month, year) {
-    const staffTotalLeave = await this.prisma.staffLeaves.aggregate({
-      _sum: {
-        leave_count: true,
-      },
-      where: {
-        staff_id: Number(id),
-      },
-    });
+  public async getStaffLeaveDetails(data) {
+    console.log(data.searchData.where);
 
     const staffLeavesInParticularMonth = await this.prisma.staffLeaves.findMany(
-      {
-        where: {
-          staff_id: Number(id),
-          leave_from: {
-            lte: new Date( `${year}-${month}-31`),
-            gte: new Date(`${year}-${month}-01`),
-          },
-        },
-      }
-
-
-     
+      data.searchData
     );
+    console.log(staffLeavesInParticularMonth);
 
-    return {res: {staffTotalLeave,staffLeavesInParticularMonth}}
+    return { res: staffLeavesInParticularMonth };
   }
 }
-
-  
-

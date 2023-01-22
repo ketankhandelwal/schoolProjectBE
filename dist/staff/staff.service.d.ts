@@ -17,17 +17,7 @@ export declare class StaffService {
     }>;
     deleteStaff(data: any): Promise<boolean>;
     saveStaffLeaves(data: any, payload: any): Promise<true | import(".prisma/client").StaffLeaves>;
-    getStaffLeaveDetails(id: any, month: any, year: any): Promise<{
-        res: {
-            staffTotalLeave: import(".prisma/client").Prisma.GetStaffLeavesAggregateType<{
-                _sum: {
-                    leave_count: true;
-                };
-                where: {
-                    staff_id: number;
-                };
-            }>;
-            staffLeavesInParticularMonth: import(".prisma/client").StaffLeaves[];
-        };
+    getStaffLeaveDetails(data: any): Promise<{
+        res: import(".prisma/client").StaffLeaves[];
     }>;
 }

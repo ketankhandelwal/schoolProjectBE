@@ -14,17 +14,5 @@ export declare class StaffController {
     }>;
     deleteStudent(data: DELETESTAFFDTO): Promise<boolean>;
     saveStudentFee(data: ADDSTAFFLEAVESDTO, req: any): Promise<true | import(".prisma/client").StaffLeaves>;
-    getStudentFeesDetails(id: number, month: number, year: number, req: any): Promise<{
-        res: {
-            staffTotalLeave: import(".prisma/client").Prisma.GetStaffLeavesAggregateType<{
-                _sum: {
-                    leave_count: true;
-                };
-                where: {
-                    staff_id: number;
-                };
-            }>;
-            staffLeavesInParticularMonth: import(".prisma/client").StaffLeaves[];
-        };
-    }>;
+    getStaffLeavesDetails(id: any, month: number, year: number, leave_type: number, req: any): Promise<any>;
 }

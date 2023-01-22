@@ -34,7 +34,6 @@ let StaffController = class StaffController {
                 status: constants_1.NUMBER.one
             },
         };
-        console.log(role);
         if (gender) {
             data.searchData.where.gender = Number(gender);
         }
@@ -118,11 +117,38 @@ let StaffController = class StaffController {
             }, common_1.HttpStatus.BAD_REQUEST);
         });
     }
-    async getStudentFeesDetails(id, month, year, req) {
-        if (!year) {
-            year = new Date().getFullYear();
+    async getStaffLeavesDetails(id, month, year, leave_type, req) {
+        console.log((id));
+        console.log(month);
+        let data = {};
+        data.searchData = {
+            where: {
+                status: constants_1.NUMBER.one,
+                staff_id: Number(id)
+            },
+        };
+        if (leave_type) {
+            data.searchData.where.leave_type = Number(leave_type);
         }
-        return this.staffService.getStaffLeaveDetails(Number(id), Number(month), Number(year)).catch((err) => {
+        if (month) {
+            data.searchData.where.leave_from = {
+                lte: new Date(`${new Date().getFullYear()}-${Number(month) + 1}-1`),
+                gte: new Date(`${new Date().getFullYear()}-${month}-1`)
+            };
+        }
+        if (year) {
+            data.searchData.where.leave_from = {
+                lte: new Date(`${Number(year) + 1}-${1}-1`),
+                gte: new Date(`${year}-${1}-1`)
+            };
+        }
+        if (year && month) {
+            data.searchData.where.leave_from = {
+                lte: new Date(`${year}-${Number(month) + 1}-1`),
+                gte: new Date(`${year}-${month}-1`)
+            };
+        }
+        return this.staffService.getStaffLeaveDetails(data).catch((err) => {
             throw new common_1.HttpException({
                 message: err.message,
             }, common_1.HttpStatus.BAD_REQUEST);
@@ -217,18 +243,20 @@ __decorate([
     (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
     (0, common_1.SetMetadata)('roles', [constants_1.ROLE_ENUM.admin, constants_1.ROLE_ENUM.subAdmin]),
-    (0, common_1.Get)('getStaffLeavesDetails/:id'),
-    (0, swagger_1.ApiParam)({ name: "id", required: true }),
+    (0, common_1.Get)('getStaffLeavesDetails'),
+    (0, swagger_1.ApiQuery)({ name: "id", required: false }),
     (0, swagger_1.ApiQuery)({ name: "year", required: false }),
     (0, swagger_1.ApiQuery)({ name: "month", required: false }),
-    __param(0, (0, common_1.Param)('id')),
+    (0, swagger_1.ApiQuery)({ name: "leave_type", required: false }),
+    __param(0, (0, common_1.Query)('id')),
     __param(1, (0, common_1.Query)('month')),
     __param(2, (0, common_1.Query)('year')),
-    __param(3, (0, common_1.Request)()),
+    __param(3, (0, common_1.Query)('leave_type')),
+    __param(4, (0, common_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Number, Number, Object]),
+    __metadata("design:paramtypes", [Object, Number, Number, Number, Object]),
     __metadata("design:returntype", Promise)
-], StaffController.prototype, "getStudentFeesDetails", null);
+], StaffController.prototype, "getStaffLeavesDetails", null);
 StaffController = __decorate([
     (0, common_1.Controller)('staff'),
     (0, swagger_1.ApiBearerAuth)(),
