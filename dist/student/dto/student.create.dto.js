@@ -54,6 +54,16 @@ __decorate([
     (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
+], STUDENTCREATEDTO.prototype, "mother_name", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], STUDENTCREATEDTO.prototype, "father_name", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
 ], STUDENTCREATEDTO.prototype, "previous_school", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),

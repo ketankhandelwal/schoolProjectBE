@@ -8,21 +8,22 @@ datasource db {
 }
 
 model Admin {
-  id            Int      @id @default(autoincrement())
-  name          String   @db.VarChar(50)
-  email         String   @db.VarChar(60)
-  designation   String   @db.VarChar(50)
-  phone_number  String   @db.VarChar(15)
-  profile_photo String?  @db.VarChar(250)
-  role          Int
-  status        Int      @default(1)
-  created_by    Int
-  updated_by    Int
-  created_at    DateTime @default(now()) @db.Timestamp(0)
-  updated_at    DateTime @default(now()) @db.Timestamp(0)
-  password      String   @db.VarChar(80)
-  Role          Role     @relation(fields: [role], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "AdminRole_FK_RoleId")
-  Status        Status   @relation(fields: [status], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "AdminStatus_FK_StatusId")
+  id                 Int                  @id @default(autoincrement())
+  name               String               @db.VarChar(50)
+  email              String               @db.VarChar(60)
+  designation        String               @db.VarChar(50)
+  phone_number       String               @db.VarChar(15)
+  profile_photo      String?              @db.VarChar(250)
+  role               Int
+  status             Int                  @default(1)
+  created_by         Int
+  updated_by         Int
+  created_at         DateTime             @default(now()) @db.Timestamp(0)
+  updated_at         DateTime             @default(now()) @db.Timestamp(0)
+  password           String               @db.VarChar(80)
+  Role               Role                 @relation(fields: [role], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "AdminRole_FK_RoleId")
+  Status             Status               @relation(fields: [status], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "AdminStatus_FK_StatusId")
+  SubAdminPermission SubAdminPermission[]
 
   @@index([role], map: "AdminRole_FK_RoleId_idx")
   @@index([status], map: "AdminStatus_FK_StatusId_idx")
@@ -71,14 +72,15 @@ model Gender {
 }
 
 model LeaveType {
-  id         Int      @id @default(autoincrement())
-  name       String   @db.VarChar(45)
-  status     Int
-  created_by Int
-  updated_by Int
-  created_at DateTime @db.Timestamp(0)
-  updated_at DateTime @db.Timestamp(0)
-  Status     Status   @relation(fields: [status], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "LeaveTypeStatus_FK_StatusId")
+  id                Int           @id @default(autoincrement())
+  name              String        @db.VarChar(45)
+  status            Int
+  created_by        Int
+  updated_by        Int
+  created_at        DateTime      @db.Timestamp(0)
+  updated_at        DateTime      @db.Timestamp(0)
+  Status            Status        @relation(fields: [status], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "LeaveTypeStatus_FK_StatusId")
+  other_StaffLeaves StaffLeaves[] @relation("StaffLeavesToStaffLeaves")
 
   @@index([status], map: "LeaveTypeStatus_FK_StatusId_idx")
 }
@@ -141,21 +143,20 @@ model Staff {
 }
 
 model StaffLeaves {
-  id                Int           @id @default(autoincrement())
-  staff_id          Int
-  leave_type        Int
-  status            Int           @default(1)
-  created_at        DateTime      @default(now()) @db.Timestamp(0)
-  updated_at        DateTime      @default(now()) @db.Timestamp(0)
-  created_by        Int
-  updated_by        Int
-  leave_from        DateTime      @db.Date
-  leave_to          DateTime      @db.Date
-  leave_count       Float         @db.Float
-  StaffLeaves       StaffLeaves   @relation("StaffLeavesToStaffLeaves", fields: [leave_type], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "StaffLeavesLeave_type_FK_LeaveTypeId")
-  other_StaffLeaves StaffLeaves[] @relation("StaffLeavesToStaffLeaves")
-  Staff             Staff         @relation(fields: [staff_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "StaffLeavesStaff_id_FK_StaffId")
-  Status            Status        @relation(fields: [status], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "StaffLeavesStatus_FK_StatusId")
+  id          Int       @id @default(autoincrement())
+  staff_id    Int
+  leave_type  Int
+  status      Int       @default(1)
+  created_at  DateTime  @default(now()) @db.Timestamp(0)
+  updated_at  DateTime  @default(now()) @db.Timestamp(0)
+  created_by  Int
+  updated_by  Int
+  leave_from  DateTime  @db.Date
+  leave_to    DateTime  @db.Date
+  leave_count Float     @db.Float
+  StaffLeaves LeaveType @relation("StaffLeavesToStaffLeaves", fields: [leave_type], references: [id], onUpdate: Restrict, map: "StaffLeavesLeave_type_FK_LeaveTypeId")
+  Staff       Staff     @relation(fields: [staff_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "StaffLeavesStaff_id_FK_StaffId")
+  Status      Status    @relation(fields: [status], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "StaffLeavesStatus_FK_StatusId")
 
   @@index([leave_type], map: "StaffLeavesLeave_type_FK_LeaveTypeId_idx")
   @@index([staff_id], map: "StaffLeavesStaff_id_FK_StaffId_idx")
@@ -163,25 +164,27 @@ model StaffLeaves {
 }
 
 model Status {
-  id          Int           @id @default(autoincrement())
-  name        String        @db.VarChar(45)
-  status      Int           @default(1)
-  created_by  Int
-  updated_by  Int
-  created_at  DateTime      @default(now()) @db.Timestamp(0)
-  updated_at  DateTime      @default(now()) @db.Timestamp(0)
-  Admin       Admin[]
-  Classes     Classes[]
-  ExpenseType ExpenseType[]
-  FeesType    FeesType[]
-  Gender      Gender[]
-  LeaveType   LeaveType[]
-  Months      Months[]
-  Role        Role[]
-  Staff       Staff[]
-  StaffLeaves StaffLeaves[]
-  Student     Student[]
-  StudentFees StudentFees[]
+  id                 Int                  @id @default(autoincrement())
+  name               String               @db.VarChar(45)
+  status             Int                  @default(1)
+  created_by         Int
+  updated_by         Int
+  created_at         DateTime             @default(now()) @db.Timestamp(0)
+  updated_at         DateTime             @default(now()) @db.Timestamp(0)
+  Admin              Admin[]
+  Classes            Classes[]
+  ExpenseType        ExpenseType[]
+  FeesType           FeesType[]
+  Gender             Gender[]
+  LeaveType          LeaveType[]
+  Months             Months[]
+  Permission         Permission[]
+  Role               Role[]
+  Staff              Staff[]
+  StaffLeaves        StaffLeaves[]
+  Student            Student[]
+  StudentFees        StudentFees[]
+  SubAdminPermission SubAdminPermission[]
 }
 
 model Student {
@@ -203,6 +206,8 @@ model Student {
   created_at             DateTime      @default(now()) @db.Timestamp(0)
   updated_at             DateTime      @default(now()) @db.Timestamp(0)
   date_of_birth          DateTime?     @db.Date
+  mother_name            String?       @db.VarChar(45)
+  father_name            String?       @db.VarChar(45)
   Classes                Classes       @relation(fields: [class_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "StudentClass_id_FK_ClassesId")
   Gender                 Gender        @relation(fields: [gender], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "StudentGender_FK_GenderId")
   Status                 Status        @relation(fields: [status], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "StudentStatus_FK_StatusId")
@@ -247,4 +252,36 @@ model Classes {
   Student    Student[]
 
   @@index([status], map: "ClassesStatus_FK_StatusId_idx")
+}
+
+model Permission {
+  id                 Int                  @id @default(autoincrement())
+  name               String               @db.VarChar(250)
+  status             Int                  @default(1)
+  created_at         DateTime             @default(now()) @db.Timestamp(0)
+  updated_at         DateTime             @default(now()) @db.Timestamp(0)
+  created_by         Int
+  updated_by         Int
+  Status             Status               @relation(fields: [status], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "permission_FK_status")
+  SubAdminPermission SubAdminPermission[]
+
+  @@index([status], map: "permission_FK_status")
+}
+
+model SubAdminPermission {
+  id            Int        @id @default(autoincrement())
+  sub_admin_id  Int
+  permission_id Int
+  status        Int        @default(1)
+  created_at    DateTime   @default(now()) @db.Timestamp(0)
+  updated_at    DateTime   @default(now()) @db.Timestamp(0)
+  created_by    Int
+  updated_by    Int
+  Permission    Permission @relation(fields: [permission_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "sub_admin_permission_FK_permission")
+  Status        Status     @relation(fields: [status], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "sub_admin_permission_FK_status")
+  Admin         Admin      @relation(fields: [sub_admin_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "sub_admin_permission_FK_sub_admin_id")
+
+  @@index([permission_id], map: "sub_admin_permission_FK_permission")
+  @@index([status], map: "sub_admin_permission_FK_status")
+  @@index([sub_admin_id], map: "sub_admin_permission_FK_sub_admin_id")
 }

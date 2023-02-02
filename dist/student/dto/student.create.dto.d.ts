@@ -6,6 +6,8 @@ export declare class STUDENTCREATEDTO {
     sec: number;
     phone_number: string;
     address: string;
+    mother_name: string;
+    father_name: string;
     previous_school: string;
     emergency_phone_number: string;
     profile_photo: string;

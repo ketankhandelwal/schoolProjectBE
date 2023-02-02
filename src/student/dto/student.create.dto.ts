@@ -35,6 +35,14 @@ export class STUDENTCREATEDTO {
 
     @ApiProperty()
     @IsString()
+    mother_name:string;
+
+    @ApiProperty()
+    @IsString()
+    father_name: string;
+
+    @ApiProperty()
+    @IsString()
     previous_school: string;
 
     @ApiProperty()
