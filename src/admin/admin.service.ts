@@ -1,76 +1,195 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { Admin, Prisma } from "@prisma/client";
-import { NUMBER, STATUS } from "src/constants";
+import { NUMBER, ROLE_ENUM, STATUS, TOTAL_PERMISSIONS } from "src/constants";
+import { pagination } from "src/helper.function";
 import { MESSAGE } from "src/message";
 import { PrismaService } from "src/prisma.service";
 
 import { UpdateAdminDto } from "./dto/admin.update.dto";
 const bcrypt = require("bcrypt");
+let generator = require("generate-password");
 
 @Injectable()
 export class AdminService {
- 
   constructor(private jwtService: JwtService, private prisma: PrismaService) {}
 
   public async createSubAdmin(payload, data: any) {
-    data.created_by = payload.id;
-    data.updated_by = payload.id;
+    let emailCheck = await this.prisma.admin.findFirst({
+      where: {
+        email: data.email,
+      },
+    });
+    if (emailCheck && emailCheck.id) {
+      throw new HttpException(
+        { message: MESSAGE.userAlreadyExists },
+        HttpStatus.BAD_REQUEST
+      );
+    }
 
-    await this.prisma.admin.create({ data: data });
+    let hashPassword = await bcrypt.hash(
+      data.password,
+      parseInt(process.env.HASH_SALT_ROUNDS)
+    );
 
-    return true;
+    let createSubAdminData = <any>{
+      name: data.name,
+      email: data.email,
+      phone_number: data.phone_number,
+      password: hashPassword,
+      role: data.role,
+      designation: data.designation,
+      profile_photo: data.profile_photo,
+      created_by: Number(payload.id),
+      updated_by: Number(payload.id),
+    };
+
+    let finalData = await this.prisma.admin.create({
+      data: createSubAdminData,
+    });
+
+    for (let key of data.permission) {
+      let createSubAdminPermissionData = <any>{
+        sub_admin_id: Number(finalData.id),
+        permission_id: Number(key.id),
+
+        status: Number(key.status),
+        created_by: Number(payload.id),
+        updated_by: Number(payload.id),
+      };
+
+      await this.prisma.subAdminPermission.create({
+        data: createSubAdminPermissionData,
+      });
+    }
+
+    return { res: finalData };
   }
 
-  public async updateSubAdminDetails(payload, data) {
-    data.updated_by = payload.id;
+  public async updateSubAdminDetails(payloadData, reqData: any) {
+    const adminData: any = {};
+    adminData.name = reqData.name;
+    adminData.phone_number = reqData.phone_number;
+    adminData.profile_photo = reqData.profile_photo;
+    adminData.updated_at = new Date();
+    adminData.updated_by = payloadData.id;
+    adminData.designation = reqData.designation;
+
+    const subAdminData: any = {};
+    subAdminData.permission = reqData.permission;
+
     await this.prisma.admin.update({
-      data: data,
+      data: adminData,
       where: {
-        id: Number(data.id),
+        id: Number(reqData.id),
       },
     });
 
-    return true;
-  }
+    // logic for subAdmin who donot have permission_id 8 or 9 or future permissions
 
-  public async getAdminDetails(id:any) {
-    const data   = await this.prisma.admin.findUnique({
-      where:{
-        id:Number(id)
+    const countSubAdminPermissions = await this.prisma.subAdminPermission.count(
+      {
+        where: {
+          sub_admin_id: Number(reqData.id),
+        },
       }
+    );
+
+    if (
+      countSubAdminPermissions < TOTAL_PERMISSIONS.total_subadmin_permissions
+    ) {
+      for (
+        let i = countSubAdminPermissions + 1;
+        i <= TOTAL_PERMISSIONS.total_subadmin_permissions;
+        i++
+      ) {
+        const newSubAdminData = {
+          sub_admin_id: reqData.id,
+          permission_id: i,
+          status: STATUS.inactive,
+          created_by: payloadData.id,
+          updated_by: payloadData.id,
+        };
+        await this.prisma.subAdminPermission.create({
+          data: newSubAdminData,
+        });
+      }
+    }
+
+    await subAdminData.permission.forEach(async (elements) => {
+      await this.prisma.subAdminPermission.updateMany({
+        data: {
+          status: elements.status,
+          updated_at: new Date(),
+        },
+        where: {
+          sub_admin_id: Number(reqData.id),
+          permission_id: elements.permission_id,
+        },
+      });
     });
-    console.log(data);
 
-    delete data.password;
+    const adminUser = await this.prisma.admin.findUnique({
+      where: {
+        id: Number(reqData.id),
+      },
+    });
+
+    delete adminUser.password;
+
     return {
-      res:data
+      res: {
+        userDeatils: adminUser,
+        permission: await this.prisma.subAdminPermission.findMany({
+          where: {
+            sub_admin_id: Number(reqData.id),
+          },
+        }),
+        messgae: "Admin Updated",
+      },
     };
-
   }
 
-  public async getSubAdminDetails(id: any) {
+  public async getAdminDetails(id: any) {
     const data = await this.prisma.admin.findUnique({
       where: {
         id: Number(id),
       },
     });
-    delete data.password
+
+    delete data.password;
+    return {
+      res: data,
+    };
+  }
+
+  public async getSubAdminDetails(id: any) {
+    const data = <any>await this.prisma.admin.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
+    delete data.password;
+    data.permissions = await this.prisma.subAdminPermission.findMany({
+      where: {
+        sub_admin_id: Number(id),
+      },
+    });
 
     return {
       res: data,
     };
   }
 
-  public async deleteSubAdmin(id:any){
+  public async deleteSubAdmin(id: any) {
     await this.prisma.admin.update({
-        data:{
-            status:STATUS.delete
-        },
-        where:{
-            id:Number(id)
-        }
-    })
+      data: {
+        status: STATUS.delete,
+      },
+      where: {
+        id: Number(id)
+      },
+    });
 
     return true;
   }
@@ -96,15 +215,17 @@ export class AdminService {
     return response;
   }
 
-
   public async changePassword(user: any, userDetails: any) {
     if (userDetails && userDetails["userDetails"]) {
       let userDetailsValue = await this.findById({
         id: userDetails["userDetails"]["userData"]["id"],
       });
-      console.log(userDetailsValue)
- let matchPassword = await bcrypt.compare(user.old_password, userDetailsValue.password)
-      console.log(matchPassword);
+
+      let matchPassword = await bcrypt.compare(
+        user.old_password,
+        userDetailsValue.password
+      );
+
       if (!matchPassword) {
         throw new HttpException(
           { message: MESSAGE.oldPasswordNotMatch },
@@ -141,4 +262,29 @@ export class AdminService {
     });
   }
 
+  public async getSubAdminList(data, request) {
+    const [offset, limit] = await pagination(data.page, data.count);
+    const countData = await this.prisma.admin.count(data.searchData);
+    data.searchData.skip = offset;
+    data.searchData.take = limit;
+
+    let response = await this.prisma.admin.findMany(data.searchData);
+    const finalData = { count: countData, finalData: response };
+    return { res: finalData };
+  }
+
+  public async getPermissionList(id: any) {
+    const newAdmin: any = {};
+    newAdmin.permission = await this.prisma.subAdminPermission.findMany({
+      where: {
+        sub_admin_id: Number(id),
+      },
+    });
+
+    return {
+      res: {
+        subAdminPermission: newAdmin.permission,
+      },
+    };
+  }
 }

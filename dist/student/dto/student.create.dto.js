@@ -25,12 +25,6 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
-], STUDENTCREATEDTO.prototype, "age", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsNumber)(),
-    __metadata("design:type", Number)
 ], STUDENTCREATEDTO.prototype, "class_id", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
@@ -86,5 +80,13 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", Number)
 ], STUDENTCREATEDTO.prototype, "gender", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        format: "date"
+    }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", Date)
+], STUDENTCREATEDTO.prototype, "date_of_birth", void 0);
 exports.STUDENTCREATEDTO = STUDENTCREATEDTO;
 //# sourceMappingURL=student.create.dto.js.map

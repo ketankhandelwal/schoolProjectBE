@@ -57,6 +57,12 @@ export class CREATESTAFFDTO {
     @IsNotEmpty()
     gender: number;
 
+    @ApiProperty({
+        format:"date"
+    })
+    @IsString()
+    @IsNotEmpty()
+    date_of_birth: Date;
 
 
     

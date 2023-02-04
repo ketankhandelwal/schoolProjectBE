@@ -33,10 +33,12 @@ export class AuthController {
 
 //CheckRole
 @Post('adminLogin')
+
+
 public async adminLogin(@Body() req: CreateAuthDto) {
  
 
-  return this.authService.adminLogin(req, ROLE_ENUM.admin).catch(err => {
+  return this.authService.adminLogin(req).catch(err => {
     throw new HttpException({
       message: err.message
     }, HttpStatus.BAD_REQUEST);

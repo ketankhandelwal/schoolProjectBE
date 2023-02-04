@@ -16,11 +16,12 @@ const auth_module_1 = require("./auth/auth.module");
 const student_module_1 = require("./student/student.module");
 const staff_module_1 = require("./staff/staff.module");
 const admin_module_1 = require("./admin/admin.module");
+const subadminpermission_module_1 = require("./subadminpermission/subadminpermission.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [auth_module_1.AuthModule, student_module_1.StudentModule, staff_module_1.StaffModule, admin_module_1.AdminModule],
+        imports: [auth_module_1.AuthModule, student_module_1.StudentModule, staff_module_1.StaffModule, admin_module_1.AdminModule, subadminpermission_module_1.SubadminpermissionModule],
         controllers: [],
         providers: [{
                 provide: core_1.APP_INTERCEPTOR,

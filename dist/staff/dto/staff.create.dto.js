@@ -80,5 +80,13 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", Number)
 ], CREATESTAFFDTO.prototype, "gender", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        format: "date"
+    }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", Date)
+], CREATESTAFFDTO.prototype, "date_of_birth", void 0);
 exports.CREATESTAFFDTO = CREATESTAFFDTO;
 //# sourceMappingURL=staff.create.dto.js.map

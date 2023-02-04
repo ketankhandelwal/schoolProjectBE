@@ -17,11 +17,6 @@ id:number;
     @ApiProperty()
     @IsNotEmpty()
     @IsNumber()
-    age : number;
-
-    @ApiProperty()
-    @IsNotEmpty()
-    @IsNumber()
     class_id : number;
 
     @ApiProperty()

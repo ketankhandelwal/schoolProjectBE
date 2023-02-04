@@ -17,13 +17,12 @@ const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
 const swagger_1 = require("@nestjs/swagger");
 const auth_create_dto_1 = require("./dto/auth.create.dto");
-const constants_1 = require("../constants");
 let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
     }
     async adminLogin(req) {
-        return this.authService.adminLogin(req, constants_1.ROLE_ENUM.admin).catch(err => {
+        return this.authService.adminLogin(req).catch(err => {
             throw new common_1.HttpException({
                 message: err.message
             }, common_1.HttpStatus.BAD_REQUEST);

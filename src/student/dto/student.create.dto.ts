@@ -8,10 +8,7 @@ export class STUDENTCREATEDTO {
     @IsNotEmpty()
     name: string;
 
-    @ApiProperty()
-    @IsNotEmpty()
-    @IsNumber()
-    age : number;
+  
 
     @ApiProperty()
     @IsNotEmpty()
@@ -60,7 +57,16 @@ export class STUDENTCREATEDTO {
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    gender : int;
+    gender : number;
+
+    @ApiProperty({
+        format:"date"
+    })
+    @IsString()
+    @IsNotEmpty()
+    date_of_birth: Date;
+
+
 
     
 

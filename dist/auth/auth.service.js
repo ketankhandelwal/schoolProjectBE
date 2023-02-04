@@ -34,12 +34,11 @@ let AuthService = class AuthService {
         }
         return null;
     }
-    async adminLogin(user, role) {
+    async adminLogin(user) {
         var userDetails = {};
         let loginData = {
             email: user.email,
             status: constants_1.STATUS.active,
-            role: role,
         };
         userDetails = await this.validateAdmin(loginData);
         if (userDetails) {
@@ -53,10 +52,18 @@ let AuthService = class AuthService {
             }
             delete userDetailsValue.password;
             const payload = { userData: userDetailsValue };
+            if (userDetailsValue && Number(userDetailsValue.role) == constants_1.ROLE_ENUM.subAdmin) {
+                userDetailsValue.permission =
+                    await this.prisma.subAdminPermission.findMany({
+                        where: {
+                            sub_admin_id: Number(userDetailsValue.id),
+                        },
+                    });
+            }
             return {
                 res: {
                     user_details: userDetailsValue,
-                    access_token: this.jwtService.sign(payload),
+                    access_token: this.jwtService.sign(payload)
                 },
             };
         }

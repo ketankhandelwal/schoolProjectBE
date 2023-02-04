@@ -83,7 +83,8 @@ let StaffService = class StaffService {
         return true;
     }
     async saveStaffLeaves(data, payload) {
-        (data.created_by = payload.id), (data.updated_by = payload.id);
+        data.created_by = payload.id;
+        data.updated_by = payload.id;
         const from = new Date(String(data.leave_from));
         const to = new Date(String(data.leave_to));
         const leave_from_year = new Date(String(data.leave_from)).getFullYear();
@@ -97,11 +98,13 @@ let StaffService = class StaffService {
             const diffTime = Math.abs(from - to);
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
             data.leave_count = diffDays + 1;
+            if (Number(data.leave_type) == 4) {
+                data.leave_count = 0.5;
+            }
             return this.prisma.staffLeaves.create({ data: data });
         }
         else {
             const new_to = new Date(`${leave_from_year}-${leave_to_month}-1`);
-            console.log(new_to);
             const diffTime1 = Math.abs(from - new_to);
             const diffDays1 = Math.ceil(diffTime1 / (1000 * 60 * 60 * 24));
             const newData = {
@@ -113,9 +116,11 @@ let StaffService = class StaffService {
                 created_by: payload.id,
                 updated_by: payload.id,
             };
+            if (Number(data.leave_type) == 4) {
+                newData.leave_count = 0.5;
+            }
             await this.prisma.staffLeaves.create({ data: newData });
             const new_from = new Date(`${leave_to_year}-${leave_to_month}-2`);
-            console.log(new_from);
             const diffTime2 = Math.abs(new_from - to);
             const diffDays2 = Math.ceil(diffTime2 / (1000 * 60 * 60 * 24));
             const newData2 = {
@@ -127,6 +132,9 @@ let StaffService = class StaffService {
                 created_by: payload.id,
                 updated_by: payload.id,
             };
+            if (Number(data.leave_type) == 4) {
+                newData2.leave_count = 0.5;
+            }
             await this.prisma.staffLeaves.create({ data: newData2 });
         }
         return true;

@@ -79,11 +79,66 @@ let AdminController = class AdminController {
             }, common_1.HttpStatus.BAD_REQUEST);
         });
     }
+    async getSubAdminList(page, count, search, start_date, end_date, req) {
+        let data = {};
+        data.searchData = {
+            where: {
+                role: constants_1.ROLE_ENUM.subAdmin,
+                status: constants_1.STATUS.active
+            },
+        };
+        if (start_date || end_date) {
+            if (start_date) {
+                start_date += " 00:00:00";
+            }
+            else {
+                start_date = constants_1.START_DATE;
+            }
+            if (end_date) {
+                end_date += " 23:59:59";
+            }
+            else {
+                let current_date = new Date();
+                end_date = current_date.toISOString().split("T")[0] + " 23:59:59";
+            }
+            data.searchData.where.created_at = {
+                lte: new Date(end_date),
+                gte: new Date(start_date),
+            };
+        }
+        data.page = page;
+        data.count = count;
+        if (search) {
+            data.searchData.where.OR = [
+                {
+                    name: {
+                        contains: search,
+                    },
+                },
+                {
+                    email: {
+                        contains: search,
+                    },
+                },
+            ];
+        }
+        data.orderBy = {
+            id: "desc",
+        };
+        return this.adminService.getSubAdminList(data, req.user.userDetails.userData.id);
+    }
+    async getPermissionList(id, req) {
+        return this.adminService.getPermissionList(id).catch((err) => {
+            throw new common_1.HttpException({
+                message: err.message,
+            }, common_1.HttpStatus.BAD_REQUEST);
+        });
+    }
 };
 __decorate([
     (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
-    (0, common_1.SetMetadata)('roles', [constants_1.ROLE_ENUM.admin]),
+    (0, common_1.SetMetadata)('roles', [constants_1.ROLE_ENUM.admin, constants_1.ROLE_ENUM.subAdmin]),
     (0, common_1.Post)('createSubAdmin'),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Request)()),
@@ -94,7 +149,7 @@ __decorate([
 __decorate([
     (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
-    (0, common_1.SetMetadata)('roles', [constants_1.ROLE_ENUM.admin]),
+    (0, common_1.SetMetadata)('roles', [constants_1.ROLE_ENUM.admin, constants_1.ROLE_ENUM.subAdmin]),
     (0, common_1.Post)('updateSubAdmin'),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Request)()),
@@ -105,7 +160,7 @@ __decorate([
 __decorate([
     (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
-    (0, common_1.SetMetadata)('roles', [constants_1.ROLE_ENUM.admin]),
+    (0, common_1.SetMetadata)('roles', [constants_1.ROLE_ENUM.admin, constants_1.ROLE_ENUM.subAdmin]),
     (0, common_1.Get)('subAdminDetails'),
     (0, swagger_1.ApiQuery)({
         name: "id", required: true
@@ -159,6 +214,36 @@ __decorate([
     __metadata("design:paramtypes", [admin_update_dto_1.UpdateAdminDto, Object]),
     __metadata("design:returntype", Promise)
 ], AdminController.prototype, "update", null);
+__decorate([
+    (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)("jwt")),
+    (0, common_1.SetMetadata)("roles", [constants_1.ROLE_ENUM.admin, constants_1.ROLE_ENUM.subAdmin]),
+    (0, common_1.Get)("getSubAdminList"),
+    (0, swagger_1.ApiQuery)({ name: "start_date", required: false }),
+    (0, swagger_1.ApiQuery)({ name: "end_date", required: false }),
+    (0, swagger_1.ApiQuery)({ name: "search", required: false }),
+    __param(0, (0, common_1.Query)("page")),
+    __param(1, (0, common_1.Query)("count")),
+    __param(2, (0, common_1.Query)("search")),
+    __param(3, (0, common_1.Query)("start_date")),
+    __param(4, (0, common_1.Query)("end_date")),
+    __param(5, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Number, String, String, String, Object]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "getSubAdminList", null);
+__decorate([
+    (0, common_1.UseGuards)(roles_guard_1.RolesGuard),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)("jwt")),
+    (0, common_1.SetMetadata)("roles", [constants_1.ROLE_ENUM.admin, constants_1.ROLE_ENUM.subAdmin]),
+    (0, common_1.Get)("getPermissionList/:id"),
+    (0, swagger_1.ApiParam)({ name: "id", required: true }),
+    __param(0, (0, common_1.Param)("id")),
+    __param(1, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "getPermissionList", null);
 AdminController = __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.Controller)('admin'),

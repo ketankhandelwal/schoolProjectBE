@@ -6,7 +6,7 @@ import {
 
 import { JwtService } from "@nestjs/jwt";
 import { MESSAGE } from "src/message";
-import { STATUS } from "src/constants";
+import { ROLE_ENUM, STATUS } from "src/constants";
 import { PrismaService } from "src/prisma.service";
 import { Prisma } from "@prisma/client";
 
@@ -39,12 +39,12 @@ export class AuthService {
   }
 
   
-  public async adminLogin(user: any, role: any) {
+  public async adminLogin(user: any) {
     var userDetails = {};
     let loginData = <any>{
       email: user.email,
       status: STATUS.active,
-      role: role,
+      
     };
 
     userDetails = await this.validateAdmin(loginData);
@@ -74,12 +74,20 @@ export class AuthService {
 
 
       const payload = { userData: userDetailsValue };
+      if ( userDetailsValue && Number(userDetailsValue.role) == ROLE_ENUM.subAdmin) {
+        userDetailsValue.permission =
+          await this.prisma.subAdminPermission.findMany({
+            where: {
+              sub_admin_id: Number(userDetailsValue.id),
+            },
+          });
+        }
       
 
       return {
         res: {
           user_details: userDetailsValue,
-          access_token: this.jwtService.sign(payload),
+          access_token: this.jwtService.sign(payload)
         },
       };
     } else {

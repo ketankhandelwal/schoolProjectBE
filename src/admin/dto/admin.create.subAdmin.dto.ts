@@ -1,51 +1,67 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsString } from "class-validator";
-
-export class CREATESUBADMINDTO {
-
+import {
+    IsEmail,
+    IsString,
+    IsNotEmpty,
+    IsNumber,
+    IsArray,
+  } from "class-validator";
+  import { ApiProperty } from "@nestjs/swagger";
+ 
+  export class CREATESUBADMINDTO {
     @ApiProperty()
-    @IsString(
-
-    )
+    @IsString()
     @IsNotEmpty()
-    name : string;
-
+    name: string;
+  
     @ApiProperty()
-    @IsString(
-
-    )
+    @IsString()
+    @IsEmail()
     @IsNotEmpty()
     email: string;
 
     @ApiProperty()
-    @IsString(
-
-    )
+    @IsString()
+    
     @IsNotEmpty()
-    designation:string;
+    password: string;
 
+
+  
     @ApiProperty()
-    @IsString(
-
-    )
+    @IsString()
     @IsNotEmpty()
     phone_number: string;
-
+  
     @ApiProperty()
-    @IsString(
-
-    )
-    @IsNotEmpty()
+    @IsString()
+    
     profile_photo: string;
+  
+    @ApiProperty({
+      example: [
+        { id: 1, status: 2, name: "Student Management" },
+        { id: 2, status: 2, name: "Staff management" },
+   
+        { id: 3, status: 2, name: "subadmin management" }
+      ],
+    })
+    @IsArray()
+    @IsNotEmpty()
+    permission: number;
+
 
     @ApiProperty()
-    @IsString(
+    @IsString()
+    designation: string;
 
-    )
+    @ApiProperty({
+        default:2
+    })
+    @IsNumber()
     @IsNotEmpty()
-    password:string
+    role: number
 
 
 
-
-}
+  }
+  

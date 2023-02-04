@@ -1,7 +1,6 @@
 export declare class UPDATESTUDENTDTO {
     id: number;
     name: string;
-    age: number;
     class_id: number;
     sec: number;
     phone_number: string;

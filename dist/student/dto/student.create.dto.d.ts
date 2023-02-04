@@ -1,7 +1,5 @@
-import { int } from "aws-sdk/clients/datapipeline";
 export declare class STUDENTCREATEDTO {
     name: string;
-    age: number;
     class_id: number;
     sec: number;
     phone_number: string;
@@ -12,5 +10,6 @@ export declare class STUDENTCREATEDTO {
     emergency_phone_number: string;
     profile_photo: string;
     allergy: string;
-    gender: int;
+    gender: number;
+    date_of_birth: Date;
 }

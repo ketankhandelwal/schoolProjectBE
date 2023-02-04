@@ -132,6 +132,7 @@ model Staff {
   updated_at            DateTime      @default(now()) @db.Timestamp(0)
   created_by            Int
   updated_by            Int
+  date_of_birth         DateTime      @db.Date
   Gender                Gender        @relation(fields: [gender], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "StaffGender_FK_GenderId")
   Role                  Role          @relation(fields: [role], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "StaffRole_FK_RoleId")
   Status                Status        @relation(fields: [status], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "StaffStatus_FK_StatusId")
@@ -190,7 +191,6 @@ model Status {
 model Student {
   id                     Int           @id @default(autoincrement())
   name                   String        @db.VarChar(60)
-  age                    Int
   class_id               Int
   sec                    String        @db.VarChar(3)
   phone_number           String        @db.VarChar(45)

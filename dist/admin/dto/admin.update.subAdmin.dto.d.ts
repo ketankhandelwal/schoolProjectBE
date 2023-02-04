@@ -1,8 +1,8 @@
 export declare class UPDATESUBADMINDTO {
+    id: number;
     name: string;
-    email: string;
-    designation: string;
     phone_number: string;
     profile_photo: string;
-    password: string;
+    permission: number;
+    designation: string;
 }

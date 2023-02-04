@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.START_DATE = exports.STATICCONTENT = exports.NUMBER = exports.S3_FILE_PATH = exports.ISACTIVE = exports.STATUS = exports.ROLE_ENUM = exports.OPEN_API_PATH = void 0;
+exports.START_DATE = exports.STATICCONTENT = exports.NUMBER = exports.TOTAL_PERMISSIONS = exports.S3_FILE_PATH = exports.ISACTIVE = exports.STATUS = exports.ROLE_ENUM = exports.OPEN_API_PATH = void 0;
 exports.OPEN_API_PATH = ["/auth/adminLogin", '/staticcontent/:id'];
 exports.ROLE_ENUM = {
     admin: 1,
@@ -19,6 +19,10 @@ exports.S3_FILE_PATH = {
     pdfFile: "static_content",
     userProfile: "user_profile",
 };
+var TOTAL_PERMISSIONS;
+(function (TOTAL_PERMISSIONS) {
+    TOTAL_PERMISSIONS[TOTAL_PERMISSIONS["total_subadmin_permissions"] = 3] = "total_subadmin_permissions";
+})(TOTAL_PERMISSIONS = exports.TOTAL_PERMISSIONS || (exports.TOTAL_PERMISSIONS = {}));
 exports.NUMBER = {
     zero: 0,
     one: 1,

@@ -11,4 +11,5 @@ export declare class CREATESTAFFDTO {
     salary: number;
     YOE: number;
     gender: number;
+    date_of_birth: Date;
 }

@@ -31,12 +31,6 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
-], UPDATESTUDENTDTO.prototype, "age", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsNumber)(),
-    __metadata("design:type", Number)
 ], UPDATESTUDENTDTO.prototype, "class_id", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),

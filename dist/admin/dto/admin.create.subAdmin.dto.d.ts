@@ -1,8 +1,10 @@
 export declare class CREATESUBADMINDTO {
     name: string;
     email: string;
-    designation: string;
+    password: string;
     phone_number: string;
     profile_photo: string;
-    password: string;
+    permission: number;
+    designation: string;
+    role: number;
 }

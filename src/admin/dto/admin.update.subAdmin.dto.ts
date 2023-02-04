@@ -1,51 +1,41 @@
+import { IsString, IsNotEmpty, IsNumber, IsArray } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsString } from "class-validator";
 
 export class UPDATESUBADMINDTO {
 
-    @ApiProperty()
-    @IsString(
+  @ApiProperty()
+  @IsNumber()
+  @IsNotEmpty()
+  id: number
 
-    )
-    @IsNotEmpty()
-    name : string;
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  name: string;
 
-    @ApiProperty()
-    @IsString(
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  phone_number: string;
 
-    )
-    @IsNotEmpty()
-    email: string;
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  profile_photo: string;
 
-    @ApiProperty()
-    @IsString(
-
-    )
-    @IsNotEmpty()
-    designation:string;
-
-    @ApiProperty()
-    @IsString(
-
-    )
-    @IsNotEmpty()
-    phone_number: string;
-
-    @ApiProperty()
-    @IsString(
-
-    )
-    @IsNotEmpty()
-    profile_photo: string;
-
-    @ApiProperty()
-    @IsString(
-
-    )
-    @IsNotEmpty()
-    password:string
+  @ApiProperty({
+    example: [
+      { permission_id: 1, status: 2 },
+      { permission_id: 2, status: 2 },
+      { permission_id: 3, status: 2 }
+    ],
+  })
+  @IsArray()
+  @IsNotEmpty()
+  permission: number;
 
 
-
-
+  @ApiProperty()
+  @IsString()
+  designation: string;
 }

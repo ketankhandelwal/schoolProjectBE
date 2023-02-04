@@ -10,28 +10,22 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UPDATESUBADMINDTO = void 0;
-const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
+const swagger_1 = require("@nestjs/swagger");
 class UPDATESUBADMINDTO {
 }
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", Number)
+], UPDATESUBADMINDTO.prototype, "id", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], UPDATESUBADMINDTO.prototype, "name", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
-], UPDATESUBADMINDTO.prototype, "email", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
-], UPDATESUBADMINDTO.prototype, "designation", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsString)(),
@@ -45,10 +39,21 @@ __decorate([
     __metadata("design:type", String)
 ], UPDATESUBADMINDTO.prototype, "profile_photo", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        example: [
+            { permission_id: 1, status: 2 },
+            { permission_id: 2, status: 2 },
+            { permission_id: 3, status: 2 }
+        ],
+    }),
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", Number)
+], UPDATESUBADMINDTO.prototype, "permission", void 0);
+__decorate([
     (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
-], UPDATESUBADMINDTO.prototype, "password", void 0);
+], UPDATESUBADMINDTO.prototype, "designation", void 0);
 exports.UPDATESUBADMINDTO = UPDATESUBADMINDTO;
 //# sourceMappingURL=admin.update.subAdmin.dto.js.map

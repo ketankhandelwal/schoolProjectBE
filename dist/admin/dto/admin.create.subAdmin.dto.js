@@ -10,8 +10,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CREATESUBADMINDTO = void 0;
-const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
+const swagger_1 = require("@nestjs/swagger");
 class CREATESUBADMINDTO {
 }
 __decorate([
@@ -23,6 +23,7 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsEmail)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CREATESUBADMINDTO.prototype, "email", void 0);
@@ -31,7 +32,7 @@ __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
-], CREATESUBADMINDTO.prototype, "designation", void 0);
+], CREATESUBADMINDTO.prototype, "password", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsString)(),
@@ -41,14 +42,32 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CREATESUBADMINDTO.prototype, "profile_photo", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        example: [
+            { id: 1, status: 2, name: "Student Management" },
+            { id: 2, status: 2, name: "Staff management" },
+            { id: 3, status: 2, name: "subadmin management" }
+        ],
+    }),
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", Number)
+], CREATESUBADMINDTO.prototype, "permission", void 0);
+__decorate([
     (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
-], CREATESUBADMINDTO.prototype, "password", void 0);
+], CREATESUBADMINDTO.prototype, "designation", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        default: 2
+    }),
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", Number)
+], CREATESUBADMINDTO.prototype, "role", void 0);
 exports.CREATESUBADMINDTO = CREATESUBADMINDTO;
 //# sourceMappingURL=admin.create.subAdmin.dto.js.map

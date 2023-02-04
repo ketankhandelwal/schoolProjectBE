@@ -82,7 +82,8 @@ export class StaffService {
   }
 
   public async saveStaffLeaves(data: any, payload) {
-    (data.created_by = payload.id), (data.updated_by = payload.id);
+    data.created_by = payload.id;
+    data.updated_by = payload.id;
     const from = <any>new Date(String(data.leave_from));
     const to = <any>new Date(String(data.leave_to));
 
@@ -101,10 +102,12 @@ export class StaffService {
       const diffTime = <any>Math.abs(from - to);
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       data.leave_count = diffDays + 1;
+      if(Number(data.leave_type) == 4 ){
+        data.leave_count = 0.5;
+      }
       return this.prisma.staffLeaves.create({ data: data });
     } else {
       const new_to = <any>new Date(`${leave_from_year}-${leave_to_month}-1`);
-      console.log(new_to);
 
       const diffTime1 = <any>Math.abs(from - new_to);
       const diffDays1 = Math.ceil(diffTime1 / (1000 * 60 * 60 * 24));
@@ -118,10 +121,13 @@ export class StaffService {
         updated_by: payload.id,
       };
 
+      if(Number(data.leave_type) == 4 ){
+        newData.leave_count = 0.5;
+      }
+
       await this.prisma.staffLeaves.create({ data: newData });
 
       const new_from = <any>new Date(`${leave_to_year}-${leave_to_month}-2`);
-      console.log(new_from);
       const diffTime2 = <any>Math.abs(new_from - to);
       const diffDays2 = Math.ceil(diffTime2 / (1000 * 60 * 60 * 24));
       const newData2 = <any>{
@@ -133,6 +139,9 @@ export class StaffService {
         created_by: payload.id,
         updated_by: payload.id,
       };
+      if(Number(data.leave_type) == 4 ){
+        newData2.leave_count = 0.5;
+      }
 
       await this.prisma.staffLeaves.create({ data: newData2 });
     }

@@ -25,6 +25,10 @@ export const S3_FILE_PATH = {
   userProfile: "user_profile",
 };
 
+export enum TOTAL_PERMISSIONS {
+  total_subadmin_permissions= 3
+}
+
 
 export const NUMBER = <any>{
   zero: 0,
