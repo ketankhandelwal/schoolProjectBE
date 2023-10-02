@@ -150,12 +150,10 @@ export class StaffService {
   }
 
   public async getStaffLeaveDetails(data) {
-    console.log(data.searchData.where);
 
     const staffLeavesInParticularMonth = await this.prisma.staffLeaves.findMany(
       data.searchData
     );
-    console.log(staffLeavesInParticularMonth);
 
     return { res: staffLeavesInParticularMonth };
   }

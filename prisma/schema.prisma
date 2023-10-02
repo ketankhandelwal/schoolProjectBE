@@ -155,6 +155,7 @@ model StaffLeaves {
   leave_from  DateTime  @db.Date
   leave_to    DateTime  @db.Date
   leave_count Float     @db.Float
+  sorting_key Int       @default(1)
   StaffLeaves LeaveType @relation("StaffLeavesToStaffLeaves", fields: [leave_type], references: [id], onUpdate: Restrict, map: "StaffLeavesLeave_type_FK_LeaveTypeId")
   Staff       Staff     @relation(fields: [staff_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "StaffLeavesStaff_id_FK_StaffId")
   Status      Status    @relation(fields: [status], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "StaffLeavesStatus_FK_StatusId")
@@ -208,6 +209,7 @@ model Student {
   date_of_birth          DateTime?     @db.Date
   mother_name            String?       @db.VarChar(45)
   father_name            String?       @db.VarChar(45)
+  sorting_key            Int           @default(1)
   Classes                Classes       @relation(fields: [class_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "StudentClass_id_FK_ClassesId")
   Gender                 Gender        @relation(fields: [gender], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "StudentGender_FK_GenderId")
   Status                 Status        @relation(fields: [status], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "StudentStatus_FK_StatusId")
@@ -250,6 +252,7 @@ model Classes {
   updated_by Int
   Status     Status    @relation(fields: [status], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ClassesStatus_FK_StatusId")
   Student    Student[]
+  setFees    setFees[]
 
   @@index([status], map: "ClassesStatus_FK_StatusId_idx")
 }
@@ -284,4 +287,17 @@ model SubAdminPermission {
   @@index([permission_id], map: "sub_admin_permission_FK_permission")
   @@index([status], map: "sub_admin_permission_FK_status")
   @@index([sub_admin_id], map: "sub_admin_permission_FK_sub_admin_id")
+}
+
+model setFees {
+  id                          Int     @id @default(autoincrement())
+  class_id                    Int
+  year                        Int
+  total_students              Int
+  fees_per_student            Int
+  total_months_fees_collected Int
+  Classes                     Classes @relation(fields: [class_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_setFees_1")
+
+  @@unique([class_id, year], name: "class_year_unique_constraint", map: "index3")
+  @@index([class_id], map: "fk_setFees_1_idx")
 }

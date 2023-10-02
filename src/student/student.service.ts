@@ -62,6 +62,8 @@ export class StudentService {
       },
     });
 
+    year = year || new Date(Date.now()).getFullYear();
+
     let response: any = [
       { CategoryName: monthCategoryDetails[0].name },
       { CategoryName: monthCategoryDetails[1].name },
@@ -83,6 +85,7 @@ export class StudentService {
       },
       where: {
         student_id: Number(id),
+        year: year,
       },
     });
 
@@ -94,6 +97,7 @@ export class StudentService {
       where: {
         student_id: Number(id),
         fees_type: 4,
+        year: year,
       },
       orderBy: {
         month: "asc",
@@ -122,6 +126,7 @@ export class StudentService {
       where: {
         student_id: Number(id),
         fees_type: 5,
+        year: year,
       },
       orderBy: {
         month: "asc",
@@ -146,6 +151,7 @@ export class StudentService {
         student_id: Number(id),
         status: STATUS.active,
         fees_type: 1,
+        year: year,
       },
       orderBy: {
         month: "asc",
@@ -169,6 +175,7 @@ export class StudentService {
       where: {
         student_id: Number(id),
         fees_type: 2,
+        year: year,
       },
       orderBy: {
         month: "asc",
@@ -193,6 +200,7 @@ export class StudentService {
       where: {
         student_id: Number(id),
         fees_type: 3,
+        year: year,
       },
       orderBy: {
         month: "asc",
@@ -214,8 +222,9 @@ export class StudentService {
         amount: true,
       },
       where: {
-        student_id:Number( id),
+        student_id: Number(id),
         fees_type: 6,
+        year: year,
       },
       orderBy: {
         month: "asc",
@@ -231,9 +240,23 @@ export class StudentService {
       }
     }
 
+    const totalFeesRemainingForSelectedYear =
+      await this.prisma.setFees.findUnique({
+        where: {
+          class_year_unique_constraint: {
+            year: year,
+            class_id: 10,
+          },
+        },
+      });
+
     return {
       res: {
         totalActions: totalFeesPaid._sum.amount,
+        feesRemaingThisYear:
+          totalFeesRemainingForSelectedYear?.total_months_fees_collected *
+            totalFeesRemainingForSelectedYear?.fees_per_student -
+          totalFeesPaid?._sum.amount,
         response,
       },
     };

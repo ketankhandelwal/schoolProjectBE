@@ -137,7 +137,6 @@ export class StudentController {
     @Post('saveStudentFee')
       async saveStudentFee(@Body() data:ADDSTUDENTFEEDTO, @Request() req)
       {
-        console.log(data);
         return this.studentService.saveStudentFees(data , req.user.userDetails.userData).catch((err) => {
           throw new HttpException(
             {

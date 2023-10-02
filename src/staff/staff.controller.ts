@@ -129,7 +129,7 @@ export class StaffController{
     @SetMetadata('roles', [ROLE_ENUM.admin, ROLE_ENUM.subAdmin])
     @Post('updateStaff')
     async updateStudent(@Body() data : UPDATESTAFFDTO, @Request() req){
-      console.log(data);
+  
         return this.staffService.updateStaffDetails(req.user.userDetails.userData,data).catch((err) => {
             throw new HttpException(
               {
@@ -188,7 +188,7 @@ export class StaffController{
     @Post('saveStaffLeaves')
       async saveStudentFee(@Body() data:ADDSTAFFLEAVESDTO, @Request() req)
       {
-        console.log(data);
+
         return this.staffService.saveStaffLeaves(data , req.user.userDetails.userData).catch((err) => {
           throw new HttpException(
             {
@@ -211,8 +211,7 @@ export class StaffController{
     @ApiQuery({name:"month", required:false})
     @ApiQuery({name:"leave_type", required:false})
     public async getStaffLeavesDetails(@Query('id') id:any, @Query('month') month:number, @Query('year') year:number, @Query('leave_type') leave_type: number, @Request() req): Promise<any>{
-      console.log((id));
-      console.log(month)
+  
 
       let data = <any>{};
       data.searchData =<any> {

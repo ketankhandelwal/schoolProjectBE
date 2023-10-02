@@ -95,7 +95,6 @@ export class AdminController{
     @Get('adminDetails')
   
     async getAdminDetails(@Request() req:any){
-      console.log(req.user.userDetails.userData.id);
       return this.adminService.getAdminDetails(req.user.userDetails.userData.id).catch((err) => {
 
         throw new HttpException(
