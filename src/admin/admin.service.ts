@@ -39,7 +39,6 @@ export class AdminService {
       password: hashPassword,
       role: data.role,
       designation: data.designation,
-      profile_photo: data.profile_photo,
       created_by: Number(payload.id),
       updated_by: Number(payload.id),
     };
@@ -70,7 +69,6 @@ export class AdminService {
     const adminData: any = {};
     adminData.name = reqData.name;
     adminData.phone_number = reqData.phone_number;
-    adminData.profile_photo = reqData.profile_photo;
     adminData.updated_at = new Date();
     adminData.updated_by = payloadData.id;
     adminData.designation = reqData.designation;
@@ -116,7 +114,7 @@ export class AdminService {
       }
     }
 
-    await subAdminData.permission.forEach(async (elements) => {
+    for (const elements of subAdminData.permission) {
       await this.prisma.subAdminPermission.updateMany({
         data: {
           status: elements.status,
@@ -127,7 +125,7 @@ export class AdminService {
           permission_id: elements.permission_id,
         },
       });
-    });
+    }
 
     const adminUser = await this.prisma.admin.findUnique({
       where: {
@@ -187,7 +185,7 @@ export class AdminService {
         status: STATUS.delete,
       },
       where: {
-        id: Number(id)
+        id: Number(id),
       },
     });
 

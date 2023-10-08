@@ -26,9 +26,7 @@ export class CREATESTAFFDTO {
     @IsString()
     previous_organization: string;
 
-    @ApiProperty()
-    @IsString()
-    profile_photo: string;
+
 
     @ApiProperty()
     @IsString()

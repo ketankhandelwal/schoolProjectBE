@@ -29,9 +29,6 @@ export class UPDATESTAFFDTO {
   @IsNotEmpty()
   address: string;
 
-  @ApiProperty()
-  @IsString()
-  profile_photo: string;
 
 
 

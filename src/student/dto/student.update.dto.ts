@@ -40,10 +40,6 @@ id:number;
 
     @ApiProperty()
     @IsString()
-    profile_photo: string;
-
-    @ApiProperty()
-    @IsString()
     allergy: string;
 
 

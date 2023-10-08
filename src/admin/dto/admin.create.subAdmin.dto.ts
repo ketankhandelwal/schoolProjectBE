@@ -31,18 +31,15 @@ import {
     @IsString()
     @IsNotEmpty()
     phone_number: string;
-  
-    @ApiProperty()
-    @IsString()
-    
-    profile_photo: string;
+
   
     @ApiProperty({
       example: [
         { id: 1, status: 2, name: "Student Management" },
         { id: 2, status: 2, name: "Staff management" },
    
-        { id: 3, status: 2, name: "subadmin management" }
+        { id: 3, status: 2, name: "subadmin management" },
+        { id: 4, status: 2, name: "Accounts Management" }
       ],
     })
     @IsArray()

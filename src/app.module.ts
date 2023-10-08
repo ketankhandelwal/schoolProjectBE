@@ -1,8 +1,8 @@
-import { Module } from "@nestjs/common";
-import { APP_INTERCEPTOR } from "@nestjs/core";
-import { APP_GUARD } from "@nestjs/core";
+import { Module, MiddlewareConsumer, NestModule } from "@nestjs/common";
+import { APP_INTERCEPTOR, APP_GUARD } from "@nestjs/core";
 import { TransformInterceptor } from "./interceptor/transform.interceptor";
 import { JwtAuthGuard } from "./auth/jwt-auth.guard";
+import { DateCheckMiddleware } from "./date-check/date-check.middleware"; // Import your middleware
 
 import { AuthModule } from "./auth/auth.module";
 import { StudentModule } from "./student/student.module";
@@ -32,4 +32,8 @@ import { AccountModule } from "./accounts/accounts.module";
     },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(DateCheckMiddleware).forRoutes("*"); // Apply your middleware to all routes
+  }
+}

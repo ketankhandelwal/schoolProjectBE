@@ -240,12 +240,18 @@ export class StudentService {
       }
     }
 
+    const student_detials = await this.prisma.student.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
+
     const totalFeesRemainingForSelectedYear =
       await this.prisma.setFees.findUnique({
         where: {
           class_year_unique_constraint: {
             year: year,
-            class_id: 10,
+            class_id: student_detials.class_id,
           },
         },
       });

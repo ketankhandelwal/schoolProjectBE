@@ -9,11 +9,6 @@ export class UpdateAdminDto {
 
     @ApiProperty()
     @IsString()
-   
-    profile_photo: string;
-
-    @ApiProperty()
-    @IsString()
     @IsNotEmpty()
     phone_number: string;
 

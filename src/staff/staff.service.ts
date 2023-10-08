@@ -102,7 +102,7 @@ export class StaffService {
       const diffTime = <any>Math.abs(from - to);
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       data.leave_count = diffDays + 1;
-      if(Number(data.leave_type) == 4 ){
+      if (Number(data.leave_type) == 4) {
         data.leave_count = 0.5;
       }
       return this.prisma.staffLeaves.create({ data: data });
@@ -121,7 +121,7 @@ export class StaffService {
         updated_by: payload.id,
       };
 
-      if(Number(data.leave_type) == 4 ){
+      if (Number(data.leave_type) == 4) {
         newData.leave_count = 0.5;
       }
 
@@ -139,7 +139,7 @@ export class StaffService {
         created_by: payload.id,
         updated_by: payload.id,
       };
-      if(Number(data.leave_type) == 4 ){
+      if (Number(data.leave_type) == 4) {
         newData2.leave_count = 0.5;
       }
 
@@ -150,7 +150,6 @@ export class StaffService {
   }
 
   public async getStaffLeaveDetails(data) {
-
     const staffLeavesInParticularMonth = await this.prisma.staffLeaves.findMany(
       data.searchData
     );
