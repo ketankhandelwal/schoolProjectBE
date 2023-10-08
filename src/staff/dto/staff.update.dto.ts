@@ -2,13 +2,10 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsEmail, IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 export class UPDATESTAFFDTO {
-
-    @ApiProperty()
-    @IsNumber()
-    @IsNotEmpty()
-    id:number
-
-
+  @ApiProperty()
+  @IsNumber()
+  @IsNotEmpty()
+  id: number;
 
   @ApiProperty()
   @IsString()
@@ -28,9 +25,6 @@ export class UPDATESTAFFDTO {
   @IsString()
   @IsNotEmpty()
   address: string;
-
-
-
 
   @ApiProperty()
   @IsNumber()

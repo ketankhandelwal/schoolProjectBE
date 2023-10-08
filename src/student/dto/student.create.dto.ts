@@ -48,10 +48,6 @@ export class STUDENTCREATEDTO {
 
     @ApiProperty()
     @IsString()
-    profile_photo: string;
-
-    @ApiProperty()
-    @IsString()
     allergy: string;
 
     @ApiProperty()
