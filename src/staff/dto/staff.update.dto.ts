@@ -30,4 +30,12 @@ export class UPDATESTAFFDTO {
   @IsNumber()
   @IsNotEmpty()
   salary: number;
+
+  @ApiProperty()
+  @IsNumber()
+  class_teacher: number;
+
+  @ApiProperty()
+  @IsString()
+  section:string;
 }

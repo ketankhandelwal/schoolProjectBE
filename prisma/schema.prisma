@@ -133,6 +133,8 @@ model Staff {
   created_by            Int
   updated_by            Int
   date_of_birth         DateTime      @db.Date
+  class_teacher         Int?
+  section               String?       @db.VarChar(45)
   Gender                Gender        @relation(fields: [gender], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "StaffGender_FK_GenderId")
   Role                  Role          @relation(fields: [role], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "StaffRole_FK_RoleId")
   Status                Status        @relation(fields: [status], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "StaffStatus_FK_StatusId")
